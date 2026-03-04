@@ -12,8 +12,6 @@ import { Product } from '../../../products/interfaces/product.interface';
 export class HomePage {
   productsService = inject(ProductsService);
 
-  products = signal<Product[]>([]);
-
   productsResource = rxResource({
     params: () => ({}),
     stream: () => this.productsService.getProducts({}),

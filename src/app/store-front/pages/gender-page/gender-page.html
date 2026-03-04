@@ -1,1 +1,10 @@
-<p>gender-page works!</p>,
+<h1 class="text-3xl font-bold font-montserrat">
+  Products for
+  <span class="text-accent">{{ gender() | titlecase }}</span>
+</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4 gap-3">
+  @for (product of productsResource.value()?.products; track product.id) {
+    <product-card [product]="product"></product-card>
+  }
+</div>

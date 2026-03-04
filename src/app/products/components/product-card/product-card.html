@@ -1,9 +1,14 @@
 <div class="card bg-base-100 shadow-xl animate-fade-in">
   <figure>
-    <img [src]="imageUrl()" [alt]="product().title" />
+    <img [src]="product().images | productImage" [alt]="product().title" />
   </figure>
   <div class="card-body">
-    <h2 class="card-title font-montserrat text-accent text-lg">{{ product().title }}</h2>
+    <h2
+      [routerLink]="['/product', product().slug]"
+      class="card-title font-montserrat text-accent text-lg cursor-pointer hover:text-primary ease-in-out duration-300"
+    >
+      {{ product().title }}
+    </h2>
     <p>
       {{ product().description | slice: 0 : 70 }}
     </p>
