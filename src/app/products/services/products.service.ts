@@ -10,15 +10,23 @@ interface Options {
   gender?: string;
 }
 
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsService {
   private http = inject(HttpClient);
 
+  private productsCache = new Map<string, ProductsResponse>();
+  private productCache = new Map<string, Product>();
+
   getProducts(options: Options): Observable<ProductsResponse> {
     const { limit = 9, offset = 0, gender = '' } = options;
+
+    const key = `${limit}-${offset}-${gender}`;
+    if (this.productsCache.has(key)) {
+      return of(this.productsCache.get(key)!);
+    }
 
     return this.http
       .get<ProductsResponse>(`${BASE_URL}/products`, {
@@ -28,10 +36,23 @@ export class ProductsService {
           gender,
         },
       })
-      .pipe(tap(console.log));
+      .pipe(
+        tap((response) => {
+          this.productsCache.set(key, response);
+        }),
+      );
   }
 
   getProductByIdSlug(idSlug: string): Observable<Product> {
-    return this.http.get<Product>(`${BASE_URL}/products/${idSlug}`);
+    const key = `${idSlug}`;
+    if (this.productCache.has(key)) {
+      return of(this.productCache.get(key)!);
+    }
+
+    return this.http.get<Product>(`${BASE_URL}/products/${idSlug}`).pipe(
+      tap((response) => {
+        this.productCache.set(key, response);
+      }),
+    );
   }
 }
