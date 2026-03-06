@@ -3,6 +3,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
+const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 @Component({
   selector: 'app-login-page',
   imports: [RouterLink, ReactiveFormsModule],
@@ -17,8 +20,8 @@ export class LoginPage {
   authService = inject(AuthService);
 
   loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    email: ['', [Validators.required, Validators.pattern(emailRegex)]],
+    password: ['', [Validators.required, Validators.pattern(passwordRegex)]],
   });
 
   onSubmit() {
