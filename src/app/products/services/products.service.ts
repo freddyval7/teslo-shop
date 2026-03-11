@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Product, ProductsResponse } from '../interfaces/product.interface';
+import { Gender, Product, ProductsResponse } from '../interfaces/product.interface';
 
 const BASE_URL = environment.baseUrl;
 
@@ -10,8 +10,23 @@ interface Options {
   gender?: string;
 }
 
+const emptyProduct: Product = {
+  id: 'new',
+  title: '',
+  price: 0,
+  description: '',
+  slug: '',
+  stock: 0,
+  sizes: [],
+  gender: Gender.Kid,
+  tags: [],
+  images: [],
+  user: {} as User,
+};
+
 import { Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { User } from '../../auth/interface/user.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsService {
@@ -54,5 +69,43 @@ export class ProductsService {
         this.productCache.set(key, response);
       }),
     );
+  }
+
+  getProductById(id: string): Observable<Product> {
+    if (id === 'new') return of(emptyProduct);
+
+    const key = `${id}`;
+    if (this.productCache.has(key)) {
+      return of(this.productCache.get(key)!);
+    }
+
+    return this.http.get<Product>(`${BASE_URL}/products/${id}`).pipe(
+      tap((response) => {
+        this.productCache.set(key, response);
+      }),
+    );
+  }
+
+  updateProduct(id: string, productLike: Partial<Product>): Observable<Product> {
+    return this.http
+      .patch<Product>(`${BASE_URL}/products/${id}`, productLike)
+      .pipe(tap((product) => this.updateProductCache(product)));
+  }
+
+  createProduct(productLike: Partial<Product>): Observable<Product> {
+    return this.http
+      .post<Product>(`${BASE_URL}/products`, productLike)
+      .pipe(tap((product) => this.updateProductCache(product)));
+  }
+
+  updateProductCache(product: Product) {
+    const productId = product.id;
+
+    this.productCache.set(productId, product);
+    this.productsCache.forEach((productsResponse) => {
+      productsResponse.products = productsResponse.products.map((currentProduct) =>
+        currentProduct.id === productId ? product : currentProduct,
+      );
+    });
   }
 }
