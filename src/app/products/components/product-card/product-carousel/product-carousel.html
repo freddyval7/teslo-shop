@@ -4,19 +4,11 @@
     <!-- Slides -->
     @for (image of images(); track image) {
       <div class="swiper-slide">
-        <img
-          class="w-full object-cover rounded-md border-2 border-slate-200"
-          [src]="image | productImage"
-          [alt]="image"
-        />
+        <img class="w-full object-cover rounded-md" [src]="image | productImage" [alt]="image" />
       </div>
     } @empty {
       <div class="swiper-slide">
-        <img
-          class="w-full object-cover rounded-md border-2 border-slate-200"
-          [src]="null | productImage"
-          [alt]="''"
-        />
+        <img class="w-full object-cover rounded-md" [src]="null | productImage" [alt]="''" />
       </div>
     }
   </div>
