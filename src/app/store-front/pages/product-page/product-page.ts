@@ -3,10 +3,11 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { ProductsService } from '../../../products/services/products.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProductCarousel } from '../../../products/components/product-card/product-carousel/product-carousel';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-product-page',
-  imports: [ProductCarousel],
+  imports: [ProductCarousel, CurrencyPipe],
   templateUrl: './product-page.html',
 })
 export class ProductPage {

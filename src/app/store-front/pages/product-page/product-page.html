@@ -5,12 +5,40 @@
 }
 
 @if (productResource.hasValue()) {
-  <div class="grid grid-cols-1 sm:grid-cols-2">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
     <product-carousel [images]="productResource.value().images"></product-carousel>
-    <div>
-      <h2 class="text-2xl font-bold font-montserrat">{{ productResource.value().title }}</h2>
-      <div class="divider"></div>
-      <p>{{ productResource.value().description }}</p>
+    <div class="flex flex-col justify-between">
+      <div>
+        <h2 class="text-2xl font-bold font-montserrat text-accent">
+          {{ productResource.value().title }}
+        </h2>
+        <div class="divider"></div>
+        <p class="text-justify">{{ productResource.value().description }}</p>
+        <div class="divider"></div>
+        <div class="flex items-center justify-between px-4">
+          <div class="flex flex-col gap-2">
+            <h2 class="text-2xl font-bold font-montserrat">Sizes</h2>
+            <div class="flex gap-2 items-center">
+              @for (size of productResource.value().sizes; track $index) {
+                <div class="badge badge-sm badge-secondary cursor-default font-medium">
+                  {{ size }}
+                </div>
+              }
+            </div>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h2 class="text-2xl font-bold font-montserrat">Price</h2>
+            <p class="text-xl font-bold font-montserrat text-accent">
+              {{ productResource.value().price | currency: 'USD' }}
+            </p>
+          </div>
+        </div>
+        <div class="divider"></div>
+      </div>
+      <div class="flex gap-2 justify-end">
+        <button class="btn btn-accent btn-outline">Add to wishlist</button>
+        <button class="btn btn-secondary btn-outline">Add to cart</button>
+      </div>
     </div>
   </div>
 }
